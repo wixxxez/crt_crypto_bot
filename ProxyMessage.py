@@ -19,6 +19,9 @@ class EncryptedTextMessage(Message):
                 char = char.upper()
                 number = ord(char) - 64
                 encrypted_numbers.append(number)
+            if char == " ":
+                number = 40
+                encrypted_numbers.append(number)
                 
         return encrypted_numbers
     
@@ -27,9 +30,15 @@ class DecryptedTextMessage(Message):
     def decrypt_message(self, numbers: list)->str:
         decrypted_message = ''
         for num in numbers:
-            decrypted_number = (num - 1) % 26
-            decrypted_char = chr(decrypted_number + 65)
+            print(num)
+            if num == 40:
+                decrypted_char = ' '
+                print("Huj")
+            else:
+                decrypted_number = (num - 1) % 26
+                decrypted_char = chr(int(decrypted_number) + 65)
             decrypted_message += decrypted_char
+
         return decrypted_message
     
 class EncoderLayer(Message):
@@ -40,7 +49,7 @@ class EncoderLayer(Message):
         self._actual_encoded_layers = 0
         self._real_message =real_message
         self._keys_per_layer = keys_per_layer
-        self._encrypted_message = EncryptedTextMessage().encrypt_message("Hello World") 
+        self._encrypted_message = EncryptedTextMessage().encrypt_message(real_message)
         self.generate_keys_for_layers()
         self._encrypted_numbers = {
             "converted message" :  self._encrypted_message 
